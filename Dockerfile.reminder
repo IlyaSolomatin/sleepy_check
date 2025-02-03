@@ -1,0 +1,9 @@
+FROM python:3.11-slim
+
+COPY reminder.py .
+
+COPY requirements_reminder.txt .
+
+RUN pip install -r requirements_reminder.txt
+
+CMD ["python", "reminder.py"]

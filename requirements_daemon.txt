@@ -1,0 +1,8 @@
+python-telegram-bot==21.6
+flask[async]~=2.3.2 
+uvicorn~=0.23.2 
+asgiref~=3.7.2
+google-cloud-firestore==2.20.0
+matplotlib==3.7.3
+pandas==2.0.3
+numpy==1.26.4 # needed for pandas

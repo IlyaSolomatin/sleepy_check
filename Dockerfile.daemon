@@ -1,0 +1,11 @@
+FROM python:3.11-slim
+
+COPY daemon.py .
+
+COPY requirements_daemon.txt .
+
+RUN pip install -r requirements_daemon.txt
+
+EXPOSE 8080
+
+CMD ["python", "daemon.py"]
