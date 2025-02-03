@@ -9,8 +9,9 @@ data_collection = 'records'
 db = firestore.Client(project=project_id, database=database)
 
 async def send_reminders():
-    docs = db.collection(data_collection).select(['user_id']).group_by('user_id').stream()
-    user_ids = [doc.get('user_id') for doc in docs]
+    # Get all documents and extract unique user_ids
+    docs = db.collection(data_collection).select(['user_id']).stream()
+    user_ids = list(set(doc.get('user_id') for doc in docs))
 
     application = Application.builder().token(TOKEN).build()
     
