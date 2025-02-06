@@ -69,13 +69,25 @@ async def report(update: Update, context: CallbackContext) -> None:
         return
         
     df['hour'] = df['timestamp'].dt.hour
-    hourly_avg = df.groupby('hour')['score'].mean()
+    hourly_stats = df.groupby('hour')['score'].agg(['mean', 'std']).fillna(0)
     
     plt.figure(figsize=(10, 6))
-    plt.plot(hourly_avg.index, hourly_avg.values, marker='o')
+    plt.plot(hourly_stats.index, hourly_stats['mean'], marker='o', label='Mean')
+    
+    plt.fill_between(hourly_stats.index, 
+                    hourly_stats['mean'] - 2*hourly_stats['std'],
+                    hourly_stats['mean'] + 2*hourly_stats['std'],
+                    color='lightgray', alpha=0.3)
+    
+    plt.scatter(hourly_stats.index, hourly_stats['mean'] + 2*hourly_stats['std'], 
+               marker='^', color='lightgray', label='+2σ')
+    plt.scatter(hourly_stats.index, hourly_stats['mean'] - 2*hourly_stats['std'], 
+               marker='v', color='lightgray', label='-2σ')
+    
     plt.xlabel('Hour')
-    plt.ylabel('Average Score')
+    plt.ylabel('Score')
     plt.grid(True)
+    plt.legend()
     
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
